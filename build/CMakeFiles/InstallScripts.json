@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/Benjamin/Documents/GitHub/EcoSim/build/cmake_install.cmake",
+		"C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,0 +1,8 @@
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/hello.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/edit_cache.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/rebuild_cache.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/CMakeFiles/SDL3-shared.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/CMakeFiles/SDL3_test.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/CMakeFiles/SDL_uclibc.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/CMakeFiles/edit_cache.dir
+C:/Users/Benjamin/Documents/GitHub/EcoSim/build/vendored/SDL/CMakeFiles/rebuild_cache.dir

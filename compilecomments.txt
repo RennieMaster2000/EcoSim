@@ -1,0 +1,10 @@
+used https://github.com/libsdl-org/SDL/blob/main/docs/INTRO-cmake.md
+
+however needed the following commands to make it work:
+
+    pacman -S --needed mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+    rm -rf build
+    cmake -S . -B build -G Ninja
+    cmake --build build
+
+I assume those last 2 are sufficient to compile now
