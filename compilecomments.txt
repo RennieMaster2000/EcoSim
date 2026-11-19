@@ -7,4 +7,5 @@ however needed the following commands to make it work:
     cmake -S . -B build -G Ninja
     cmake --build build
 
-I assume those last 2 are sufficient to compile now
+The last two can be used in MSYS2 to compile
+The executable is then located in ./build
