@@ -1,5 +1,5 @@
 # ninja log v7
-26	75	8168316737847119	C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/cmake.verify_globs	7b1e198ed768a4ee
+26	74	8168749442270534	C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/cmake.verify_globs	7b1e198ed768a4ee
 158	3379	8168096601423580	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/e_log10.c.obj	cb60aef906bcc11b
 167	3396	8168096601508720	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/e_pow.c.obj	f76a41c4b4da3d
 278	3409	8168096602619874	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/s_fabs.c.obj	30c6410b0f0b5c03
@@ -30,7 +30,7 @@
 3480	4716	8168096634641360	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/s_tan.c.obj	452dd61f7995b417
 3425	4731	8168096634090866	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/s_isnan.c.obj	987e32e7088f52e8
 3411	4745	8168096633980879	vendored/SDL/CMakeFiles/SDL_uclibc.dir/src/libm/s_isinff.c.obj	69f631c45d87a00e
-3739	4771	8168096637237984	CMakeFiles/hello.dir/hello.c.obj	40f41ad2eb83e170
+106	633	8168670147446546	CMakeFiles/hello.dir/hello.c.obj	40f41ad2eb83e170
 4452	4812	8168096644364327	vendored/SDL/CMakeFiles/SDL3-shared.dir/src/SDL_hints.c.obj	31b800fe8d37bde
 4468	4827	8168096644529362	vendored/SDL/CMakeFiles/SDL3-shared.dir/src/SDL_list.c.obj	f6a80ae7d4c31288
 4098	4910	8168096640821068	vendored/SDL/CMakeFiles/SDL3-shared.dir/src/SDL_assert.c.obj	12b24b6888eb5871
@@ -279,9 +279,9 @@
 13917	15217	8168096739013175	vendored/SDL/CMakeFiles/SDL3-shared.dir/src/gpu/d3d12/SDL_gpu_d3d12.c.obj	9f71119a6698b690
 15218	15974	8168096759316892	SDL3.dll	9de59a3ff2b97492
 15218	15974	8168096759316892	vendored/SDL/libSDL3.dll.a	9de59a3ff2b97492
-624	778	8168316743824713	hello.exe	adddcb890dc7bdc9
+604	743	8168734402766666	hello.exe	adddcb890dc7bdc9
 140	2462	8168252531201635	CMakeFiles/hello.dir/snake.c.obj	7260339db3f10112
-98	623	8168316738563555	CMakeFiles/hello.dir/test1.c.obj	fe06e59db73a4a5c
-26	75	8168317039537470	C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/cmake.verify_globs	7b1e198ed768a4ee
-98	596	8168317040256253	CMakeFiles/hello.dir/test1.c.obj	fe06e59db73a4a5c
-596	736	8168317045233203	hello.exe	adddcb890dc7bdc9
+97	603	8168734397701523	CMakeFiles/hello.dir/test1.c.obj	fe06e59db73a4a5c
+21	69	8168749881830118	C:/Users/Benjamin/Documents/GitHub/EcoSim/build/CMakeFiles/cmake.verify_globs	7b1e198ed768a4ee
+91	593	8168749882540726	CMakeFiles/hello.dir/test1.c.obj	fe06e59db73a4a5c
+594	743	8168749887558181	hello.exe	adddcb890dc7bdc9

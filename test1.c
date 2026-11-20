@@ -6,6 +6,7 @@
 #define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <stdio.h>
 
 #define SDL_WINDOW_WIDTH    720
 #define SDL_WINDOW_HEIGHT   480
@@ -15,9 +16,11 @@
 /*Animals*/
 
 #define ANIMAL_COUNT 5
+#define ANIMAL_SIZE 16
 
 typedef enum {
-    ANIMAL_SWALLOW = 0U
+    ANIMAL_SWALLOW = 0U,
+    ANIMAL_FALCON = 1U
 } AnimalSpecies;
 
 typedef struct {
@@ -27,11 +30,26 @@ typedef struct {
 } Animal;
 
 
+typedef enum {
+    KEY_PRESSED = 0b1,
+    KEY_CHANGED = 0b10
+} KeyPress; //It works as a flag
+
+typedef struct{
+    KeyPress w;
+    KeyPress a;
+    KeyPress s;
+    KeyPress d;
+} InputState;
+
+
 /*Core Structs*/
 typedef struct {
     Uint64 rand;
     Animal *animals;
+    InputState *input;
 } Game;
+
 
 typedef struct
 {
@@ -47,9 +65,11 @@ typedef struct
 */
 
 void init_animal(Animal *animal, Uint64 x, Uint64 y, AnimalSpecies species){
+    //SDL_Log("Initializing Animal");
     animal->x = x;
     animal->y = y;
     animal->species = species;
+    //SDL_Log("Initialized Animal");
 }
 
 /*
@@ -57,6 +77,7 @@ void init_animal(Animal *animal, Uint64 x, Uint64 y, AnimalSpecies species){
 */
 
 void Render(void *appstate){
+    //SDL_Log("Render reached");
     int i;
     /*Set Vars*/
     AppState *as = (AppState *)appstate;
@@ -72,11 +93,22 @@ void Render(void *appstate){
 
     /*ENTITIES*/
     Animal *animals = game->animals;
-    r.h = 5;
-    r.w = 5;
+    r.h = ANIMAL_SIZE;
+    r.w = ANIMAL_SIZE;
     for(i=0; i<ANIMAL_COUNT; i++){
         r.x = animals[i].x;
         r.y = animals[i].y;
+        switch (animals[i].species){ //Color
+            case ANIMAL_FALCON:
+                SDL_SetRenderDrawColor(rend, 255, 230, 200, SDL_ALPHA_OPAQUE);
+                break;
+            case ANIMAL_SWALLOW:
+                SDL_SetRenderDrawColor(rend, 255, 127, 0, SDL_ALPHA_OPAQUE);
+                break;
+            default:
+                SDL_SetRenderDrawColor(rend, 255, 255, 255, SDL_ALPHA_OPAQUE);
+                break;
+        }
         SDL_RenderFillRect(rend,&r);
     }
 
@@ -87,15 +119,27 @@ void Render(void *appstate){
 }
 
 void Step(Game *game){
-
+    int dx = 0;
+    int dy = 0;
+    if(game->input->w & KEY_PRESSED) dx++;
+    if(game->input->a & KEY_PRESSED) dy--;
+    if(game->input->s & KEY_PRESSED) dx--;
+    if(game->input->d & KEY_PRESSED) dy++;
 }
 
-void Init(Game *game){
+void Init(Game **gameloc){
+    //SDL_Log("Init reached");
+    *gameloc = SDL_malloc(sizeof(Game));
+    Game *game = *gameloc;
+    game->input = SDL_calloc(1,sizeof(InputState));
+    //SDL_Log("Game Initialized");
     /*Create set of animals*/
     int i;
-    game->animals = SDL_malloc(ANIMAL_COUNT * sizeof(Animal));
-    for(i = 0; i<ANIMAL_COUNT; i++){
-        init_animal(&(game->animals[i]),i*10,i*10,ANIMAL_SWALLOW);
+    game->animals = SDL_malloc(ANIMAL_COUNT*sizeof(Animal));
+    //SDL_Log("allocated succesfully");
+    init_animal(&(game->animals[0]),0,0,ANIMAL_FALCON);
+    for(i = 1; i<ANIMAL_COUNT; i++){
+        init_animal(&(game->animals[i]),i*2*ANIMAL_SIZE,i*2*ANIMAL_SIZE,ANIMAL_SWALLOW);
     }
 }
 
@@ -110,6 +154,7 @@ static SDL_AppResult Key_Event(Game *game, SDL_Keycode key_code){
  */
 
 SDL_AppResult SDL_AppIterate(void *appstate){
+    //SDL_Log("SDL Iteration");
     //prep vars
     AppState *as = (AppState *)appstate;
     Game * game = as->game;
@@ -129,7 +174,7 @@ SDL_AppResult SDL_AppIterate(void *appstate){
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]){
-
+    //SDL_Log("Goodday");
     //Create App Info
     if (!SDL_SetAppMetadata("Example Snake game", "1.0", "com.example.Snake")) {
         return SDL_APP_FAILURE;
@@ -155,12 +200,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]){
     SDL_SetRenderLogicalPresentation(as->renderer, SDL_WINDOW_WIDTH, SDL_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
     
     //Initialize Game
-    Init(as->game);
+    Init(&(as->game));
 
     //Initialize time
     as->last_step = SDL_GetTicks();
     
     //Return
+    //SDL_Log("SDL Initialized");
     return SDL_APP_CONTINUE;
 }
 
