@@ -15,6 +15,13 @@
 
 /*Animals*/
 
+typedef struct {
+    int64_t vx;
+    int64_t vy;
+    int64_t alpha; //angle that is changed
+    int64_t r; //amplitude that is changed
+} Swallow_Extra;
+
 #define ANIMAL_COUNT 5
 #define ANIMAL_SIZE 16
 
@@ -26,6 +33,9 @@ typedef enum {
 typedef struct {
     Uint64 x;
     Uint64 y;
+    Uint64 newx;
+    Uint64 newy;
+    void* extra;
     AnimalSpecies species;
 } Animal;
 
@@ -53,18 +63,54 @@ typedef struct
 /*
 * Game Content
 */
+//Begin Sparrow
+void Swallow_Init(Animal *animal, Game *game){
+    animal->extra = malloc(sizeof(Swallow_Extra));
+}
+#define SWALLOW_ALPHA_SPEED
+void Swallow_Step(Animal *animal, Game *game){
+    Swallow_Extra *swinfo = (Swallow_Extra *)animal->extra;
+    swinfo->alpha +=
+}
+//End Sparrow
 
 void init_animal(Animal *animal, Uint64 x, Uint64 y, AnimalSpecies species){
     //SDL_Log("Initializing Animal");
     animal->x = x;
     animal->y = y;
+    animal->newx = x;
+    animal->newy = y;
     animal->species = species;
     //SDL_Log("Initialized Animal");
+}
+
+
+void Player_Step(Game *game){
+    const bool *key_states = SDL_GetKeyboardState(NULL);
+
+    int dx = 0;
+    int dy = 0;
+    if(key_states[SDL_SCANCODE_D]) dx++;
+    if(key_states[SDL_SCANCODE_W]) dy--;
+    if(key_states[SDL_SCANCODE_A]) dx--;
+    if(key_states[SDL_SCANCODE_S]) dy++;
+    
+    game->animals[0].newx += (dy)?dx*FALCON_SPEED*0.7:dx*FALCON_SPEED;
+    game->animals[0].newy +=(dx)?dy*FALCON_SPEED*0.7:dy*FALCON_SPEED;
+}
+
+void Loc_Update(Game *game){
+    int i;
+    for(i=0;i<ANIMAL_COUNT;i++){
+        game->animals[i].x=game->animals[i].newx;
+        game->animals[i].y=game->animals[i].newy;
+    }
 }
 
 /*
 * Game Core
 */
+
 
 void Render(void *appstate){
     //SDL_Log("Render reached");
@@ -111,17 +157,9 @@ void Render(void *appstate){
 void Step(Game *game){
 
     /*Player input*/
-    const bool *key_states = SDL_GetKeyboardState(NULL);
-
-    int dx = 0;
-    int dy = 0;
-    if(key_states[SDL_SCANCODE_D]) dx++;
-    if(key_states[SDL_SCANCODE_W]) dy--;
-    if(key_states[SDL_SCANCODE_A]) dx--;
-    if(key_states[SDL_SCANCODE_S]) dy++;
-    
-    game->animals[0].x += (dy)?dx*FALCON_SPEED*0.7:dx*FALCON_SPEED;
-    game->animals[0].y +=(dx)?dy*FALCON_SPEED*0.7:dy*FALCON_SPEED;
+    Player_Step(game);
+    /*Updating positions*/
+    Loc_Update(game);
 }
 
 void Init(Game **gameloc){
