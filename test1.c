@@ -24,30 +24,20 @@ typedef enum {
 } AnimalSpecies;
 
 typedef struct {
-    int x;
-    int y;
+    Uint64 x;
+    Uint64 y;
     AnimalSpecies species;
 } Animal;
 
+#define POSITION_FRACTION_BITS 16
 
-typedef enum {
-    KEY_PRESSED = 0b1,
-    KEY_CHANGED = 0b10
-} KeyPress; //It works as a flag
-
-typedef struct{
-    KeyPress w;
-    KeyPress a;
-    KeyPress s;
-    KeyPress d;
-} InputState;
+#define FALCON_SPEED (2<<POSITION_FRACTION_BITS)
 
 
 /*Core Structs*/
 typedef struct {
     Uint64 rand;
     Animal *animals;
-    InputState *input;
 } Game;
 
 
@@ -96,8 +86,8 @@ void Render(void *appstate){
     r.h = ANIMAL_SIZE;
     r.w = ANIMAL_SIZE;
     for(i=0; i<ANIMAL_COUNT; i++){
-        r.x = animals[i].x;
-        r.y = animals[i].y;
+        r.x = ((int64_t)animals[i].x)>>POSITION_FRACTION_BITS;
+        r.y = ((int64_t)animals[i].y)>>POSITION_FRACTION_BITS;
         switch (animals[i].species){ //Color
             case ANIMAL_FALCON:
                 SDL_SetRenderDrawColor(rend, 255, 230, 200, SDL_ALPHA_OPAQUE);
@@ -119,31 +109,39 @@ void Render(void *appstate){
 }
 
 void Step(Game *game){
+
+    /*Player input*/
+    const bool *key_states = SDL_GetKeyboardState(NULL);
+
     int dx = 0;
     int dy = 0;
-    if(game->input->w & KEY_PRESSED) dx++;
-    if(game->input->a & KEY_PRESSED) dy--;
-    if(game->input->s & KEY_PRESSED) dx--;
-    if(game->input->d & KEY_PRESSED) dy++;
+    if(key_states[SDL_SCANCODE_D]) dx++;
+    if(key_states[SDL_SCANCODE_W]) dy--;
+    if(key_states[SDL_SCANCODE_A]) dx--;
+    if(key_states[SDL_SCANCODE_S]) dy++;
+    
+    game->animals[0].x += (dy)?dx*FALCON_SPEED*0.7:dx*FALCON_SPEED;
+    game->animals[0].y +=(dx)?dy*FALCON_SPEED*0.7:dy*FALCON_SPEED;
 }
 
 void Init(Game **gameloc){
     //SDL_Log("Init reached");
     *gameloc = SDL_malloc(sizeof(Game));
     Game *game = *gameloc;
-    game->input = SDL_calloc(1,sizeof(InputState));
     //SDL_Log("Game Initialized");
+
     /*Create set of animals*/
     int i;
     game->animals = SDL_malloc(ANIMAL_COUNT*sizeof(Animal));
     //SDL_Log("allocated succesfully");
     init_animal(&(game->animals[0]),0,0,ANIMAL_FALCON);
     for(i = 1; i<ANIMAL_COUNT; i++){
-        init_animal(&(game->animals[i]),i*2*ANIMAL_SIZE,i*2*ANIMAL_SIZE,ANIMAL_SWALLOW);
+        init_animal(&(game->animals[i]),i*2*ANIMAL_SIZE<<POSITION_FRACTION_BITS,i*2*ANIMAL_SIZE<<POSITION_FRACTION_BITS,ANIMAL_SWALLOW);
     }
 }
 
 static SDL_AppResult Key_Event(Game *game, SDL_Keycode key_code){
+    
     return SDL_APP_CONTINUE;
 }
 
