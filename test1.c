@@ -6,7 +6,7 @@
 #define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
-#include <stdio.h>
+#include <math.h>
 
 #define SDL_WINDOW_WIDTH    720
 #define SDL_WINDOW_HEIGHT   480
@@ -18,7 +18,7 @@
 typedef struct {
     int64_t vx;
     int64_t vy;
-    int64_t alpha; //angle that is changed
+    float alpha; //angle that is changed
     int64_t r; //amplitude that is changed
 } Swallow_Extra;
 
@@ -64,13 +64,21 @@ typedef struct
 * Game Content
 */
 //Begin Sparrow
-void Swallow_Init(Animal *animal, Game *game){
+#define SWALLOW_MAG_SPEED (2<<POSITION_FRACTION_BITS)
+void Swallow_Init(Animal *animal){
     animal->extra = malloc(sizeof(Swallow_Extra));
+    ((Swallow_Extra *)(animal->extra))->r = SWALLOW_MAG_SPEED;
+    ((Swallow_Extra *)(animal->extra))->alpha = 0.0f;
 }
-#define SWALLOW_ALPHA_SPEED
+#define SWALLOW_ALPHA_SPEED 0.1f
 void Swallow_Step(Animal *animal, Game *game){
     Swallow_Extra *swinfo = (Swallow_Extra *)animal->extra;
-    swinfo->alpha +=
+    swinfo->alpha += SWALLOW_ALPHA_SPEED;
+    if(swinfo->alpha>=2*SDL_PI_F) swinfo->alpha -= 2*SDL_PI_F;
+    swinfo->vx = swinfo->r * cos((double)swinfo->alpha);
+    swinfo->vy = swinfo->r * sin((double)swinfo->alpha);
+    animal->newx += swinfo->vx;
+    animal->newy += swinfo->vy;
 }
 //End Sparrow
 
@@ -81,6 +89,13 @@ void init_animal(Animal *animal, Uint64 x, Uint64 y, AnimalSpecies species){
     animal->newx = x;
     animal->newy = y;
     animal->species = species;
+    switch(species){
+        case ANIMAL_SWALLOW:
+            Swallow_Init(animal);
+            break;
+        default:
+            break;
+    }
     //SDL_Log("Initialized Animal");
 }
 
@@ -155,7 +170,16 @@ void Render(void *appstate){
 }
 
 void Step(Game *game){
-
+    int i;
+    /*Animal Steps*/
+    for(i=0; i< ANIMAL_COUNT; i++){
+        switch(game->animals[i].species){
+            case ANIMAL_SWALLOW:
+                Swallow_Step(&(game->animals[i]), game);
+            default:
+                break;
+        }
+    }
     /*Player input*/
     Player_Step(game);
     /*Updating positions*/
